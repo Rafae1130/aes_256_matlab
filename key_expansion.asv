@@ -1,0 +1,45 @@
+function [temp] = key_expansion(i,w, w_prev,check,p)
+
+ persistent round_count
+ persistent n
+    if isempty(round_count)
+        round_count = 1;
+    end
+   
+   disp('value of n')
+    disp(n)
+
+if (p==2)
+    if(mod(i+1,8)==0)
+    round_count=round_count+1;
+    end
+end
+
+if mod(i,8)==0
+    
+    key=circshift(w,-1);
+    y=dec2hex(key);
+    key_1=cast(SubBytes(y, check), 'uint8');
+    temp=cast(key_1, 'uint8');
+    temp=(RC(temp',round_count))';
+    temp=bitxor(temp, cast(w_prev,'uint8'));
+ 
+
+elseif (mod(i,4)==0) && (mod(i,8)~=0)
+    
+    y=dec2hex(w);
+    key=cast(SubBytes(y,check),'uint8');
+    temp=(bitxor(key, cast(w_prev,'uint8')));
+
+    
+else 
+    temp=bitxor(cast(w, 'uint8'), cast(w_prev,'uint8'));
+    
+    disp('in last loop')
+end
+
+disp("word number")
+disp(i)
+
+ 
+end
